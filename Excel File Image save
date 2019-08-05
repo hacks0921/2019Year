@@ -1,0 +1,41 @@
+import matplotlib
+import numpy as np
+import argparse
+import collections
+import time
+import os
+import shutil
+# import cv2
+# import pandas as pd
+from openpyxl import load_workbook
+
+file_name = load_workbook('D:/python_ex/5월6월.xlsx')
+worksheet = file_name['Sheet1']  # sheet name or sheet number or list of sheet numbers and names
+
+count = 0
+g_count = 0
+n_count = 0
+
+# 0... 10 == 11
+for row in worksheet.iter_rows():
+    # 첫번째 행.
+    count = count + 1
+    # count += 1
+    # print(count)   GRAY_AVG/DDDDDD
+    img_path = row[10].value + '/' + row[9].value
+
+    if os.path.isfile(img_path):
+        if row[11].value  :
+            # print("Not Good", path)
+            shutil.copy2(img_path, 'D:/practice/cmi image/Q')
+            print(img_path)
+
+            n_count += 1
+        else:
+            # print("Good", img_path )
+            # shutil.copy2(img_path, 'D:/practice/cmi image/G')
+            g_count += 1
+    else:
+        print(img_path)
+#
+print(g_count, n_count, g_count+n_count)
