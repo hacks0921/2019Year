@@ -1,0 +1,23 @@
+from __future__ import print_function
+import os, sys
+from PIL import Image
+
+images = []
+images_name = []
+path = "./samples"
+result_path = "./results"
+valid_images = [".png", ".jpg"]
+
+for f in os.listdir(path):
+    ext = os.path.splitext(f)[1]
+    if ext.lower() not in valid_images:
+        continue
+    images.append(Image.open(os.path.join(path,f)))
+    images_name.append(f)
+
+box = (50,50,100,100)
+
+for i in range(len(images)):
+    crop_images = images[i].crop(box)
+    crop_images.save(os.path.join(result_path, "crop_"+images_name[i]))
+
