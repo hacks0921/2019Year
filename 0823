@@ -1,0 +1,36 @@
+import glob
+import os
+import shutil
+from PIL import Image
+import cv2 
+
+
+#images = glob.glob('//172.25.26.41\work\TEST/*.jpg')
+data_dir = '//172.25.26.41\work\TEST'
+data_list1 =  '//172.25.26.41\work\TEST\A'
+data_list2 =  '//172.25.26.41\work\TEST\B'
+
+images = os.listdir(data_dir)
+
+if not os.path.isdir(data_list1):
+    os.mkdir(data_list1)
+    
+if not os.path.isdir(data_list2):
+    os.mkdir(data_list2)
+    
+    
+
+
+for x in images:
+    if '5400' in x:
+        print(x)
+        shutil.copy(os.path.join(data_dir, x), data_list1)
+    else :
+        print('pass')
+        shutil.copy(os.path.join(data_dir, x),data_list2)
+        
+        
+im = Image.open('//172.25.26.41\\work\\TEST\\a.JPG')
+im.save('seo.jpg')
+im.show()
+cv2.imwrite('Path/Image.jpg', image_name) 
