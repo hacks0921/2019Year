@@ -15,3 +15,11 @@ for item in file_list:
 data = pd.DataFrame(file_list)
 data.head()
 data.to_csv('data.csv')  
+
+
+
+files = []
+for file in os.listdir(data_dir):
+    if file.endswith(".JPG"):
+        print(file)
+        files.append(file)
