@@ -37,4 +37,13 @@ for x in images:
         elif '7400' in x:
             print('pass')
             shutil.copy(os.path.join(data_dir, x), data_list2)
+            
+# =============== 파일 이름 추출 / CSV File 저장====================
+data = pd.DataFrame(images)
+data.head() # 5줄 확인 
+data.to_csv('0826.csv') # CSV File 저장 
+
+
+
+
 
