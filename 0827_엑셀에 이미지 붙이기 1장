@@ -1,0 +1,21 @@
+import win32com.client as win32
+
+from PIL import Image
+import matplotlib.image as img
+import matplotlib.pyplot as pp
+
+# fileName = "C:\\Users\\Administrator\\Desktop\\TEST\\a.jpg"
+# im = Image.open(fileName)
+# im.show()
+# im.save('rename.jpg')
+
+
+============엑셀에 이미지 붙이기 =====================
+
+
+excel = win32.gencache.EnsureDispatch('Excel.Application')
+wb = excel.Workbooks.Add()
+ws = wb.Sheets("Sheet1")
+rng = ws.Range("B2")
+image = ws.Shapes.AddPicture("C:\\Users\\Administrator\\Desktop\\TEST\\a.jpg", False, True, rng.Left, rng.Top, 100, 100)
+excel.Visible=True
