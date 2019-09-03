@@ -1,0 +1,68 @@
+import os
+import openpyxl
+from PIL import Image
+
+DIR_ROOT = '//172.25.26.41/qpc/P8FRPR/RPR/SEO/ImgGather/BL/COT_ORG/ORG'
+EXCEL_ROOT = 'C:/Users/user/Desktop/BL_results.xlsx'
+
+judge_name = os.listdir(DIR_ROOT)
+# wb = openpyxl.load_workbook()
+wb = openpyxl.Workbook()
+
+for name in judge_name :
+    # 경로 설정
+        results_root = os.path.join(DIR_ROOT, name, 'IMAGE', 'results')
+    resize_root = os.path.join(results_root, 'resize')
+    file_name_list = os.listdir(results_root)
+    if not os.path.isdir(resize_root):
+        os.mkdir(resize_root)
+
+    for index in file_name_list:
+        if 'png' in index:
+            img_file = os.path.join(results_root, index)
+            img = Image.open(img_file)
+            img = img.resize((512,512), Image.BICUBIC)   #BICBIC ???
+            img.save(os.path.join(resize_root, index))
+
+    file_name_list = os.listdir(resize_root)
+    file_name_list.sort()
+
+    file_name_label = []
+    file_name_image = []
+
+    for index in file_name_list:
+        if 'label' in index:
+            file_name_label.append(index)
+
+        if 'image' in index:
+            file_name_image.append(index)
+
+    file_name_label.sort()
+    file_name_image.sort()
+
+
+
+    ws = wb.create_sheet(name)
+
+    # ws.append(file_name_label)
+
+    i = 1
+
+    for index in file_name_image:
+        ws.cell(row=i, column = 1).value = os.path.join(results_root, index)  # 파일 명 삽입
+        # ws.cell(row=i, column = 2).hyperlink = os.path.join(resize_root, index)
+        # ws.cell(row=i, column = 3).hyperlink = os.path.join(resize_root, file_name_image[i])
+        img1 = openpyxl.drawing.image.Image(os.path.join(resize_root, index))  #이미지 불러오기
+        # img1.anchor(ws.cell(row=i, column = 2))
+        img1.anchor = ws.cell(row=i, column=2).coordinate #이미지 넣기
+        ws.add_image(img1)
+
+        i = i+1
+
+    # 새로운 Sheet 생성
+    # img1 = openpyxl.drawing.image.Image(os.path.join(results_root, index))
+    # A = ws.cell(row=i, column = 2)
+    # ws.add_image(img1, A.coordinate)
+
+wb.save(EXCEL_ROOT)
+# wb.close()
