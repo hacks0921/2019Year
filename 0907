@@ -1,0 +1,42 @@
+import glob
+import os
+import shutil
+from PIL import Image
+
+data_dir = 'C:\\Users\home\Desktop\python\picture'
+
+data_list1 =  'C:\\Users\home\Desktop\python\picture_A'
+data_list2 =  'C:\\Users\home\Desktop\python\picture_B'
+
+images = os.listdir(data_dir)
+
+if not os.path.isdir(data_list1):
+    os.mkdir(data_list1)
+if not os.path.isdir(data_list2):
+    os.mkdir(data_list2)
+    
+    
+for x in images:
+    if 'sea' in x:
+        print(x)
+        shutil.copy(os.path.join(data_dir,x), data_list1)
+    else:
+        print('pass')
+        shutil.copy(os.path.join(data_dir,x), data_list2)
+        
+        
+files = []
+files_dir=[]
+for file in images:
+    if file.endswith(".jpg"):  #and ('sea' in file):
+        print(file)
+        print(os.path.join(data_dir,file))
+        files.append(file)
+        files_dir.append(os.path.join(data_dir,file))
+
+import pandas as pd
+# excel = pd.DataFrame({"경로":files_dir,"이름":files})
+excel = pd.DataFrame({"경로":files_dir,"이름":files})
+excel = pd.DataFrame(excel, columns = ['이름','경로'])
+
+excel.to_excel('picture.xlsx')
