@@ -32,3 +32,16 @@ for row in ws.iter_rows(min_row=2):  #2번째 행 부터
 pd.DataFrame(img_paths)
 
 wb.save('test.xlsx')
+
+
+=============================================================================
+
+for row in ws.iter_rows(min_row=2):  #2번째 행 부터 
+    img_path = row[2].value
+    img_paths.append(img_path)
+    print(img_path)        
+    img = openpyxl.drawing.image.Image(img_path)  #이미지 불러오기
+    img.anchor(ws.cell(row=i, column=10))   #.coordinate) #이미지 넣기
+    ws.add_image(img)
+    i= i+1
+    print(i)
