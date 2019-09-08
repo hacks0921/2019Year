@@ -13,6 +13,10 @@ ws = wb['Sheet1']
 # print(ws)
 # print(wb)
 
+ws.row_dimensions[1].height  = 70
+ws.column_dimensions['A'].width  = 70
+# 
+
 
 img_paths = []
 i = 1
