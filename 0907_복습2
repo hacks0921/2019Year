@@ -45,3 +45,30 @@ for row in ws.iter_rows(min_row=2):  #2번째 행 부터
     ws.add_image(img)
     i= i+1
     print(i)
+
+
+
+====================================================================================
+image resize 
+
+
+import os
+import openpyxl
+from PIL import Image
+
+Dir_Root = 'C://Users/home/Desktop/python/picture'
+Resize_Root = 'C://Users/home/Desktop/python/picture/Resize'
+
+file_name_list = os.listdir(Dir_Root)
+
+if not os.path.isdir(Resize_Root):
+    os.mkdir(Resize_Root)
+    
+for index in file_name_list:
+    if 'jpg' in index:
+        img_file = os.path.join(Dir_Root, index)
+        img = Image.open(img_file)
+        img = img.resize((512,512), Image.BICUBIC)   #BICBIC ???
+        print(os.path.join(Resize_Root,"Resize_"+index))
+        img.save(os.path.join(Resize_Root,"Resize_"+index))
+        
