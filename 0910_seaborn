@@ -1,0 +1,36 @@
+import seaborn as sns
+
+%matplotlib inline
+sns.set(style="ticks")
+df = sns.load_dataset("anscombe")
+df.shape
+df.describe()
+df
+df["dataset"] == "I"
+df[df["dataset"] == "I"].describe()
+df[df["dataset"] == "II"].describe()
+df[df["dataset"] == "III"].describe()
+df[df["dataset"] == "IV"].describe()
+
+# 메소드의 괄호 () 안에서 SHIFT + TAB 누르면 문서 보임
+sns.lmplot(x="x", y="y", data=df)
+
+sns.lmplot(x="x", y="y", data=df, hue = "dataset")
+
+
+sns.lmplot(x="x", y="y", data=df, hue = "dataset", col="dataset")
+
+
+sns.lmplot(x="x", y="y", data=df, hue = "dataset", col="dataset", ci=None)
+
+sns.lmplot(x="x", y="y", data=df, hue = "dataset", col="dataset", ci=100)
+
+sns.lmplot(x="x", y="y", data=df, hue = "dataset", col="dataset", col_wrap = 2, ci=100)
+
+sns.lmplot(x="x", y="y", data=df, hue = "dataset",
+           col="dataset", col_wrap = 2, ci=100, 
+            palette='muted', height = 3)
+            
+            
+            
+            ========================================
