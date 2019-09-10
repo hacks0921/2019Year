@@ -1,0 +1,75 @@
+import glob
+import os
+import shutil
+from PIL import Image
+
+# data_dir = 'C:\\Users\Administrator\Desktop\Jupyter_NOTE\samples'
+#
+# data_list1 = 'C:\\Users\Administrator\Desktop\Jupyter_NOTE\picture_A'
+# data_list2 = 'C:\\Users\Administrator\Desktop\Jupyter_NOTE\picture_B'
+
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QInputDialog
+
+class MyApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        # self.initUI()
+        # self.datadir
+
+    # def initUI(self):
+    #     # self.btn = QPushButton('Dialog', self)
+    #     # self.btn.move(30, 30)
+    #     # self.btn.clicked.connect(self.showDialog)
+    #     # self.le = QLineEdit(self)
+    #     # self.le.move(120, 35)
+    #     # self.setWindowTitle('Input dialog')
+    #     # self.setGeometry(300, 300, 300, 200)
+    #     # self.show()
+
+    def showDialog(self):
+        data_dir, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter your name:')
+        # self.datadir = data_dir
+        return data_dir
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = MyApp()
+
+    data_dir = ex.showDialog()
+    images = os.listdir(data_dir)
+
+    data_list1 = './picture_A'
+    data_list2 = './picture_B'
+
+    if not os.path.isdir(data_list1):
+        os.mkdir(data_list1)
+    if not os.path.isdir(data_list2):
+        os.mkdir(data_list2)
+    # pyinstaller --onefile 0910_1.py
+    for x in images:
+        if '복사본' in x:
+            print(x)
+            shutil.copy(os.path.join(data_dir, x), data_list1)
+        else:
+            print('pass')
+            shutil.copy(os.path.join(data_dir, x), data_list2)
+
+    files = []
+    files_dir = []
+    for file in images:
+        if file.endswith(".jpg"):  # and ('sea' in file):
+            print(file)
+            print(os.path.join(data_dir, file))
+            files.append(file)
+            files_dir.append(os.path.join(data_dir, file))
+
+    sys.exit(app.exec_())
+
+
+
+
+
+
+
