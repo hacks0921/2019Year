@@ -32,5 +32,9 @@ sns.lmplot(x="x", y="y", data=df, hue = "dataset",
             palette='muted', height = 3)
             
             
+sns.lmplot(x="x", y="y", data=df, hue = "dataset",
+          col="dataset", col_wrap = 2, ci=100, 
+          palette='muted', height = 3,
+          scatter_kws={"s": 10, "alpha":0.1})
             
             ========================================
