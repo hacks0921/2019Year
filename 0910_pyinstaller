@@ -1,0 +1,5 @@
+# pyinstaller --onefile 0910_1.py
+
+pip install PyQt5
+
+conda install pyinstaller
