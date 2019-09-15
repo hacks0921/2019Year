@@ -1,0 +1,159 @@
+fruit= ["사과","사과","사과","바나나","복숭아","복숭아"]
+
+d = {}
+
+for f in fruit:
+    if f in d: # 사과라는 키가 d라는 딕션어리에 있어?
+        d[f] = d[f] + 1 # 그럼 사과 갯수를 한 ㅏ올려줘
+    else:
+        d[f] = 1 # 만약에 사과라는 애가 없으면 딕션어리에 넣고 벨류는 1로 만들어줘
+print(d)
+
+
+
+//////////////////////////////////////////////////////////
+
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def say_hello(self, to_name):
+        print("안념!     "+     to_name + "나는" + self.name)
+
+    def intorduce(self):
+        print("내이름은" + self.name + "그리고 나는" + self.age + "살이야")
+
+wonie = Person("워니", "20살")
+wonie.intorduce()
+wonie.say_hello("지아")
+
+///////////////////////////////////////////////////////////
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def say_hello(self, to_name):
+        print("안념!     "+     to_name + "나는" + self.name)
+    def intorduce(self):
+        print("내이름은" + self.name + "그리고 나는" + self.age + "살이야")
+
+class Police(Person):
+    def arrest(self, to_arrest):
+        print("넌 체포되었다" + to_arrest)
+
+class Programer(Person):
+    def program(self, to_program):
+        print("다음에 뭐 만들지 ???" + to_program)
+
+wonie = Person("워니","20살")
+junie = Police("제니","30살")
+micle = Programer("마이클","40살")
+
+wonie.say_hello("kkk")
+junie.arrest("워니")
+micle.program("이메일 클라이언트")
+
+/////////////////////////////////////////
+# for in in range(10) :
+'''
+# for 예문
+for i in range(10):
+    i = i+1
+    print("gkgkgkgkgk")
+# while 예문
+i = 1
+while i < 3:
+    i=i+1
+    print("""하이 안녕
+    배고프다 하하하하 
+    하하하하하하하""")
+
+# while 무한루프 테스트
+i=0
+while True:
+    i=i+1
+    print("하이 무한루프 테스트")
+    print(i)
+    if i > 5:
+        break
+        print("엇 안돌아가네")
+
+
+# continue TEST
+i = 0
+for i in range(5):
+    i=i+1
+    print(i)
+    print("1번 사람")
+    print("2번 사람")
+    if i == 2:
+        continue
+    print("종학: 엇 안나오나?")
+
+#리스트 확인
+x = [4,3,2,1]
+y= sorted(x)
+print(y)
+z= sum(x)
+print(z)
+
+x= [4,3,2,1]
+for n in x:
+    print(n)
+
+y = ["hellow","there"]
+for c in y:
+    print(c)
+
+print(x.index(3))
+print(y.index("hellow"))
+print("hellow" in y)
+print("bye" in y)
+
+if "hellow" in y:
+    print("Hellow 가 있어요")
+
+
+
+x = tuple()
+y = ('a','b','c')
+z = (1,"hellow","there")
+print(x+y)
+print('a' in y)
+print(z.index(1))
+
+# 튜플과 리스트의 차이는 어싸인먼크
+
+# x[0] = 10
+# mutable (가변) vs inmutable (불변)
+'''
+
+# 딕션어리
+# x= dict()
+# y={}
+# print(x)
+# print(y)
+
+
+
+# y= {1: "서종학",
+#     2: "20살"}
+# print(x)
+# print(x["name"])
+# print(y)
+# print(y[1])
+#
+# print("name" in x)
+# print(x.keys())
+# print(x.values())
+
+x= {"name": "Wonie",
+    "age": 20 }
+
+x[0] = "워니"
+for key in x:
+    print(key)
+    print(x[key])
+x["school"]="한빛"
+print(x)
