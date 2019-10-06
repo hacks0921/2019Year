@@ -1,0 +1,40 @@
+from openpyxl import load_workbook
+import pandas as pd
+
+wb = load_workbook(filename="dataframe.xlsx") #엑셀파일 불러오기
+print(wb.sheetnames)
+# ws = wb['Sheet1']
+
+df = pd.read_excel('dataframe.xlsx', sheet_name= 'Sheet1')
+# print(df)
+df['신규'] = df['Unit Cost'] * df['Total']
+# print(df)
+df = df.sort_values(by = '신규', ascending=[False])
+# df.columns = ['name', 'age', 'job','new4','new5','new6','new7','new8','kkk']
+# print(df[1:5]) # 특정 열 범위 지정 1~5 선택
+# print(df.iloc[:,[0,5]])  # 특정 위치 컬럼 선택 0,5 선택
+# print(df.iloc[:,0:3])  # 특정 위치 컬럼 범위 선택 0~3
+# df.to_excel('result.xlsx', sheet_name= '신규')
+
+# print(df.shape)
+# print(len(df.index))
+# print((df.columns))  # 현재 컬럼 이름 조회
+# print((df.index))  # 현재 컬럼 이름 조회
+
+# print(df[['name', 'age']])
+
+sm = df['Total'].sum()
+print(sm)
+print("합계: %d" % (sm))
+
+
+print("합계:" + str(sm))
+# print((df.columns))  # 현재 컬럼 이름 조회
+# print('---------------')
+# print(df.sum(axis = 0))
+# print(df.sum(axis = 1))
+
+# print(df['Total'].sum())
+# # print("sum:" + df['Total'].sum())
+
+# mn = df['Total'].min()
