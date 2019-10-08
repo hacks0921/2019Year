@@ -1,0 +1,36 @@
+import numpy as np
+import os
+import shutil
+import pandas as pd
+import openpyxl
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
+
+# 1. 이미지 파일 폴더 리스트 생성
+img_dir = 'C:/Users/Administrator/Pictures/사진편집실습용샘플'
+filenames = os.listdir(img_dir)
+
+# 2. 이미지 파일 리스트, 경로 엑셀 저장
+wb = Workbook()  # 워크북 열기
+ws = wb['Sheet']  # Sheet 활성화\
+for i in range(len(filenames)):
+    ws.cell(row=i + 1, column=1).value = i
+    ws.cell(row=i + 1, column=2).value = filenames[i]
+    ws.cell(row=i + 1, column=3).value = img_dir + filenames[i]
+    ws.cell(row=i + 1, column=4).value = os.path.join(img_dir, filenames[i])
+    ws.row_dimensions[i+1].height  = 70   # 높이 변경
+
+# 3. 경로에 따른 이미지 파일 엑셀 붙이기  : 반복구문
+    ext = os.path.splitext(os.path.join(img_dir, filenames[i]))[-1]
+    if ext == '.jpg':
+        img = openpyxl.drawing.image.Image(os.path.join(img_dir, filenames[i]))  #이미지 불러오기
+        img.width = 100
+        img.height = 80
+        img.anchor = ws.cell(row=i+1, column=5).coordinate #이미지 넣기
+        ws.add_image(img)
+
+ws.column_dimensions['E'].width  = 15 # 폭 변경
+# ws.row_dimensions[1].height = 20  # 높이 변경
+
+# 4. 저장
+wb.save("1018_이미지.xlsx")
