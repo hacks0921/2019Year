@@ -1,0 +1,37 @@
+
+import os
+import shutil
+from openpyxl import load_workbook
+
+# load excel and data picking according to the given condition
+file_name = load_workbook('D:/기현_작업폴더/VAP_검사정보조회 PANEL_MAS_kihyun.xlsx')
+worksheet = file_name['Sheet1']  # sheet name or sheet number or list of sheet numbers and names
+
+
+count = 0
+fail = 0
+g_count = 0
+n_count = 0
+for row in worksheet.iter_rows():
+    count += 1
+    # print(count)
+    img_path = row[9].value
+    img_path2 = row[10].value
+
+    if os.path.isfile(img_path):
+        save_path = 'D:/기현_작업폴더/P8VAP/' + row[6].value
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+        shutil.copy2(img_path , save_path)
+    elif os.path.isfile(img_path2):
+        save_path = 'D:/기현_작업폴더/P8VAP/' + row[6].value
+        if not os.path.exists(save_path):
+            os.mkdir(save_path)
+        shutil.copy2(img_path2, save_path)
+    else:
+        print("FAIL : ", img_path)
+        fail += 1
+
+
+print("total iamges : {:5d}, fail images : {:5d}".format(count, fail))
+
