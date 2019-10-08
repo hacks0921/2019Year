@@ -1,37 +1,34 @@
-
 import os
-import shutil
-from openpyxl import load_workbook
+import openpyxl
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
 
-# load excel and data picking according to the given condition
-file_name = load_workbook('D:/기현_작업폴더/VAP_검사정보조회 PANEL_MAS_kihyun.xlsx')
-worksheet = file_name['Sheet1']  # sheet name or sheet number or list of sheet numbers and names
+# 1. 이미지 파일 폴더 리스트 생성
+img_dir = 'C:/Users/Administrator/Pictures/사진편집실습용샘플'
+filenames = os.listdir(img_dir)
 
+# 2. 이미지 파일 리스트, 경로 엑셀 저장
+wb = Workbook()  # 워크북 열기
+ws = wb['Sheet']  # Sheet 활성화\
+for i in range(len(filenames)):
+    ws.cell(row=i + 1, column=1).value = i
+    ws.cell(row=i + 1, column=2).value = filenames[i]
+    ws.cell(row=i + 1, column=3).value = img_dir + filenames[i]
+    ws.cell(row=i + 1, column=4).value = os.path.join(img_dir, filenames[i])
+    ws.row_dimensions[i+1].height  = 100   # 엑셀 행 높이 변경
 
-count = 0
-fail = 0
-g_count = 0
-n_count = 0
-for row in worksheet.iter_rows():
-    count += 1
-    # print(count)
-    img_path = row[9].value
-    img_path2 = row[10].value
+# 3. 경로에 따른 이미지 파일 엑셀 붙이기  : 반복구문
+    ext = os.path.splitext(os.path.join(img_dir, filenames[i]))[-1]
+    if ext == '.jpg':
+        img = openpyxl.drawing.image.Image(os.path.join(img_dir, filenames[i]))  #이미지 불러오기
+        img.width = 150
+        img.height = 100
+        img.anchor = ws.cell(row=i+1, column=5).coordinate #이미지 넣기
+        ws.add_image(img)
 
-    if os.path.isfile(img_path):
-        save_path = 'D:/기현_작업폴더/P8VAP/' + row[6].value
-        if not os.path.exists(save_path):
-            os.mkdir(save_path)
-        shutil.copy2(img_path , save_path)
-    elif os.path.isfile(img_path2):
-        save_path = 'D:/기현_작업폴더/P8VAP/' + row[6].value
-        if not os.path.exists(save_path):
-            os.mkdir(save_path)
-        shutil.copy2(img_path2, save_path)
-    else:
-        print("FAIL : ", img_path)
-        fail += 1
+ws.column_dimensions['E'].width  = 20 # 폭 변경
+# ws.row_dimensions[1].height = 20  # 높이 변경
+# ws.set_column('A:A', 25)
 
-
-print("total iamges : {:5d}, fail images : {:5d}".format(count, fail))
-
+# 4. 저장
+wb.save("1018_이미지.xlsx")
