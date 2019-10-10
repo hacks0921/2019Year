@@ -1,0 +1,53 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QInputDialog
+
+class MyApp(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    def setupUI(self):
+        self.setGeometry(800, 200, 300, 300)
+        self.setWindowTitle("PyStock v0.1")
+
+    def showDialog(self):
+        data_dir, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter your name:')
+        # self.datadir = data_dir
+        return data_dir   # 주소 값을 Restun 해줌
+
+app = QApplication(sys.argv)
+ex = MyApp()
+data_dir = ex.showDialog()
+
+import os
+import shutil
+from openpyxl import load_workbook
+
+# load excel and data picking according to the given condition
+# file_name = load_workbook('D:/Python/Study/1009/1010_P9 TEST.xlsx')
+file_name = load_workbook(data_dir)
+worksheet = file_name['Sheet1']  # sheet name or sheet number or list of sheet numbers and names
+
+count = 0
+fail = 0
+g_count = 0
+n_count = 0
+for row in worksheet.iter_rows():
+    count += 1
+    # print(count)
+    img_path = row[0].value  # 파일 경로 설정
+    if os.path.isfile(img_path):
+        dir_path = './' + row[1].value + '_' + row[2].value  # 저장 경로 생성
+        if not os.path.exists(dir_path):   # 저장 경로가 없으면 신규 생성
+            os.mkdir(dir_path)
+        name = os.path.split(row[0].value)  # 파일 경로 분리
+        name = os.path.splitext(name[1])  # 파일 확장자 분리
+        save_path = dir_path +'/' +name[0]+ "_"+row[3].value + "-" + row[4].value + name[1]  # 저장 경로 설정
+                #저장 경로 + 파일 이름  + 추가하고싶은 이름                     + 확장자명(name[1])
+        shutil.copy2(img_path , save_path)  # 파일 경로에 있는 이미지를 해당 폴더로 이동
+
+    else:
+        print("FAIL : ", img_path)
+        fail += 1
+
+print("total iamges : {:5d}, fail images : {:5d}".format(count, fail))
+
