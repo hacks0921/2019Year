@@ -1,0 +1,56 @@
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QBasicTimer
+
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUI()
+
+    def setupUI(self):
+        #윈도우 만들기
+        self.setGeometry(800, 400, 300, 150) # 위치, 크기
+        self.setWindowTitle('서종학')
+
+        # 상태Bar 만들기
+        self.statusBar = QStatusBar(self)
+        self.setStatusBar(self.statusBar)
+
+        # 라벨/텍스트박스/버튼 만들기
+        label = QLabel("경로입력:", self)
+        label.move(20, 20) # Label 위치
+
+        self.lineEdit = QLineEdit("입력", self)
+        self.lineEdit.move(100, 20) # Text 입력 위치
+
+        self.btn = QPushButton('시작', self)
+        self.btn.move(40, 60)  # 버튼 위치
+        self.btn.clicked.connect(self.doAction)   # doAction에 연결하기
+
+        # pbar 만들기
+        self.pbar = QProgressBar(self)
+        self.pbar.setGeometry(30, 100, 200, 25)  # 위치, 크기
+
+        # Qbasic Timer 불러오기
+        self.timer = QBasicTimer()
+        self.step = 0
+
+
+    def doAction(self):
+        # lineEdit의 텍스트를 받아서 상태 바에 뿌려주기
+        self.test = self.lineEdit.text()
+        self.statusBar.showMessage(self.lineEdit.text())
+        print(self.test)
+        # Progress Bar 올리기
+        # self.pbar.setValue(self.step)
+        i = 0
+        for k in range(1000000):
+            i = i +1
+            print(i)
+            self.pbar.setValue(100 * (i / 1000000))
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    mywindow = MyWindow()
+    mywindow.show()
+    app.exec_()
