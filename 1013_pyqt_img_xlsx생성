@@ -1,0 +1,77 @@
+import sys
+from PyQt5 import QtWidgets
+from PyQt5 import uic
+import os
+import openpyxl
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
+
+class Form(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        QtWidgets.QDialog.__init__(self, parent)
+        self.ui = uic.loadUi("1012_QT_UI_V0.1.ui")
+        self.ui.pushButton_1.clicked.connect(self.doAction_1)  # doAction에 연결하기
+        self.ui.pushButton_2.clicked.connect(self.doAction_2) # doAction에 연결하기
+        # self.ui.pushButton_3.clicked.connect(self.doAction_3) # doAction에 연결하기
+        # self.ui.pushButton_4.clicked.connect(self.doAction_4) # doAction에 연결하기
+
+        self.ui.show()
+
+    def doAction_1(self):
+        print("doAction_1")
+
+    def doAction_2(self):
+        print("doAction_2")
+        # self.img_dir = self.ui.lineEdit_2.text()
+        img_dir = self.ui.lineEdit_2.text()
+        print(img_dir)
+
+        pbar_val= self.ui.progressBar_2.value()
+        print(pbar_val)
+        self.ui.progressBar_2.setValue(80)
+        print(pbar_val)
+
+
+        # 1. 이미지 파일 폴더 리스트 생성-----------------------------------------------------------------
+        # img_dir = 'C:/Users/Administrator/Pictures/사진편집실습용샘플'
+        filenames = os.listdir(img_dir)
+        print(filenames)
+
+        # 2. 이미지 파일 리스트, 경로 엑셀 저장-----------------------------------------------------------
+        wb = Workbook()  # 워크북 열기
+        ws = wb['Sheet']  # Sheet 활성화
+
+        for i in range(len(filenames)):
+            ws.cell(row=i + 1, column=1).value = i
+            ws.cell(row=i + 1, column=2).value = filenames[i]
+            ws.cell(row=i + 1, column=3).value = img_dir + '/' + filenames[i]
+            # ws.cell(row=i + 1, column=4).value = os.path.join(img_dir, filenames[i])
+            ws.row_dimensions[i + 1].height = 70  # 높이 변경
+            img_path = ws.cell(row=i + 1, column=3).value
+
+            # 3. 경로에 따른 이미지 파일 엑셀 붙이기  : 반복구문-------------------------------------------
+            ext = os.path.splitext(img_path)[-1]
+            print(ext)
+            if ext == '.jpg':
+                # print(os.path.join(img_dir, filenames[i]))
+                img = openpyxl.drawing.image.Image(img_path)  # 이미지 불러오기
+                img.width = 150
+                img.height = 100
+                img.anchor = ws.cell(row=i + 1, column=4).coordinate  # 이미지 넣기
+                ws.add_image(img)
+                print(i)
+                print(len(filenames))
+                
+            #3-1 Progress bar 증가 -----------------------------------------------------------------------
+                self.ui.progressBar_2.setValue(100 * ((i+1) / len(filenames)))
+
+
+        # 4. 저장-----------------------------------------------------------------------------------------
+        ws.column_dimensions['E'].width = 20  # 폭 변경
+        wb.save("1018_이미지2.xlsx")
+        print("완료")
+
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    w = Form()
+    sys.exit(app.exec())
