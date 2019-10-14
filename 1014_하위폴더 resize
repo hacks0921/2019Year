@@ -1,0 +1,24 @@
+import os
+import openpyxl
+from PIL import Image
+
+Dir_Root = 'D:/Python/Study/1014/A_1000'
+Resize_Root = 'D:/Python/Study/1014/resize'
+
+file_name_list = os.listdir(Dir_Root)
+
+if not os.path.isdir(Resize_Root):
+    os.mkdir(Resize_Root)
+
+for r, d, f in os.walk(Dir_Root):
+    r1 = r.replace('D:/Python/Study/1014/A_1000', 'D:/Python/Study/1014/resize')
+    if not os.path.isdir(r1):
+        os.mkdir(r1)
+    for index in f:
+        if 'jpg' in index:
+            img_file = os.path.join(r, index)
+
+            img = Image.open(img_file)
+            img = img.resize((512, 512), Image.BICUBIC)  # BICBIC ???
+            print(os.path.join(r1, "Resize_" + index))
+            img.save(os.path.join(r1, "Resize_" + index))  # 이미지 경로에 reszie 이름 붙이기
