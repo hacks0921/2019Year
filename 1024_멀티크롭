@@ -1,0 +1,46 @@
+import os
+from PIL import Image
+
+Dir_Root = "./AMA KEY 불량_None"
+Resize_Root = Dir_Root + "\\Crop"
+
+# Dir_Root = 'D:/Python/Study/1014/A_1000'
+# Resize_Root = 'D:/Python/Study/1014/resize'
+file_name_list = os.listdir(Dir_Root)
+count = 0
+
+#
+# if not os.path.isdir(Resize_Root):
+#     os.mkdir(Resize_Root)
+
+for r, d, f in os.walk(Dir_Root):
+    count = 0
+    # count += 1
+    # print(count)
+    # r1 = r.replace('D:/Python/Study/1014/A_1000', 'D:/Python/Study/1014/resize')
+    r1 = r.replace(Dir_Root, Resize_Root)
+    if not os.path.isdir(r1):
+        os.mkdir(r1)
+
+    for index in f:
+        if 'jpg' or 'JGP' in index:
+            img_file = os.path.join(r, index)
+            img_size_x, img_size_y = Image.open(img_file).size
+            print(Image.open(img_file).size)
+            # size_w,size_h = Image.open(img_file).size)
+            box1 = (0, 0, 128, 128)
+            box2= (0, img_size_y - 100, 128, img_size_y - 100 + 128)
+            box3 = (img_size_x - 100, 0, img_size_x - 100+128, 128)
+            box4= (img_size_x - 100, img_size_y - 100,img_size_x - 100+ 128,img_size_y - 100+ 128)
+            img1 = Image.open(img_file).crop(box1)
+            img2 = Image.open(img_file).crop(box2)
+            img3 = Image.open(img_file).crop(box3)
+            img4 = Image.open(img_file).crop(box4)
+            # img = img.resize((512, 512), Image.BICUBIC)  # BICBIC ???
+            print(os.path.join(r1, "Crop" + index))
+            img1.save(os.path.join(r1, "Crop1" + index))  # 이미지 경로에 reszie 이름 붙이기
+            img2.save(os.path.join(r1, "Crop2" + index))  # 이미지 경로에 reszie 이름 붙이기
+            img3.save(os.path.join(r1, "Crop3" + index))  # 이미지 경로에 reszie 이름 붙이기
+            img4.save(os.path.join(r1, "Crop4" + index))  # 이미지 경로에 reszie 이름 붙이기
+            count += 1
+            print(count)
