@@ -1,0 +1,3 @@
+conda config --set ssl_verify false
+
+출처: https://rfriend.tistory.com/tag/pip install SSL CERTIFICATE VIRIFY FAILED error [R, Python 분석과 프로그래밍의 친구 (by R Friend)]
