@@ -1,0 +1,185 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+
+from torchvision import datasets, transforms
+from torch.autograd import Variable
+from torch.utils.data import DataLoader, Dataset, TensorDataset
+
+import matplotlib.pyplot as plt
+import random
+
+# batch size 정의??
+batch_size = 32
+# 학습 데이터  경로
+train_dataset = datasets.MNIST(root='./mnist_data/',
+                               train=True,
+                               transform=transforms.ToTensor(),
+                               download=True)
+# 테스트 데이터  경로
+test_dataset = datasets.MNIST(root='./mnist_data/',
+                              train=False,
+                              transform=transforms.ToTensor())
+
+# TRAIN SET / LABEL -->
+train_ds = train_dataset.data[:50000, :, :] # DATA 개수 , 세로 길이 , 가로 길이
+train_ds_label = train_dataset.targets.data[:50000] # 0~ 50000 라벨 사용
+# VALID SET / LABEL
+valid_ds = train_dataset.data[50000:, :, :]
+valid_ds_label = train_dataset.targets.data[50000:]
+# TEST SET  / LABEL
+test_ds = test_dataset.data
+test_ds_label = test_dataset.targets.data
+
+
+# TRAIN SET LOADER
+train_loader = DataLoader(dataset=TensorDataset(train_ds, train_ds_label),
+                          batch_size=batch_size, shuffle=True)
+# VALID SET LOADER
+valid_loader = DataLoader(dataset=TensorDataset(valid_ds, valid_ds_label))
+
+# TEST SET LOADER
+test_loader = DataLoader(dataset=TensorDataset(test_ds, test_ds_label))
+
+
+######################################
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.fc1 = nn.Linear(28 * 28, 16)  # 28 X 28 이미지를 개의 CHANEL로 변화
+        self.fc2 = nn.Linear(16, 10) # # Class가 10개로 만들어주는 FC
+
+    def forward(self, x):
+        x = x.view(-1, 784) # 1열로 만들어준다
+        x = self.fc1(x) #F1 통과 16 CHANEL 변경
+        x = F.relu(x)
+        x = self.fc2(x)  #F1 통과 10 CHANEL 변경
+        #     self.linear1 = nn.Linear(784, 512, bias=True)
+        #     self.linear2 = nn.Linear(512, 512, bias=True)
+        #     self.linear3 = nn.Linear(512, 512, bias=True)
+        #     self.linear4 = nn.Linear(512, 512, bias=True)
+        #     self.linear5 = nn.Linear(512, 256, bias=True)
+        #     self.linear6 = nn.Linear(256, 128, bias=True)
+        #     self.linear7 = nn.Linear(128, 10, bias=True)
+        #
+        # def forward(self, x):
+        #     x = x.view(-1, 784)
+        #     x = self.linear1(x)
+        #     x = F.relu(x)
+        #     x = self.linear2(x)
+        #     x = F.relu(x)
+        #     x = self.linear3(x)
+        #     x = F.relu(x)
+        #     x = self.linear4(x)
+        #     x = F.relu(x)
+        #     x = self.linear5(x)
+        #     x = F.relu(x)
+        #     x = self.linear6(x)
+        #     x = F.relu(x)
+        #     x = self.linear7(x)
+        return x
+
+
+#################################################### CPu, GPU 자원 설정
+net = Net()
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')   # CPU, GPU 사용 설정
+net.to(device)
+
+criterion = nn.CrossEntropyLoss()  # LOSS 계산
+optimizer = optim.Adam(net.parameters(), lr=1e-3)  # ADAM 이라는 OPTIMIZER 함수 사용
+
+training_loss = []  #LOSS 초기값 설정
+best_accuracy = 0
+########################################### 에폭 설정 1~20
+for epoch in range(1, 20):
+    net.train()
+    train_loss = 0
+    loss = 0
+    for batch_idx, (data, label) in enumerate(train_loader):  # 학습 데이터를 인덱스와, DATA LABEL 설정
+        data, label = Variable(data.float()).to(device), Variable(label).to(device)
+        optimizer.zero_grad()
+
+        output = net.forward(data)
+
+        loss = criterion(output, label)
+        loss.backward()
+        train_loss += loss.item()
+        optimizer.step()
+
+    net.eval()
+    correct = 0
+    total = 0
+
+    # 학습을 하면서 VALIDATION 평가 셋을 가지고 값을 출력
+
+    for data_v, label_v in (valid_loader):
+        data_v, label_v = Variable(data_v.float()).to(device), Variable(label_v).to(device)
+
+        output_v = net.forward(data_v)
+        _, predicted_v = torch.max(output_v.data, 1)
+        total += label_v.size(0)
+        correct += (predicted_v == label_v).sum()
+
+    print('Epoch : %d // Loss : %.6f // Validation Accuracy : %.2f %%' % (
+    epoch, train_loss, 100 * correct.numpy() / float(total)))
+
+    if best_accuracy < (correct.numpy() / float(total)):
+        best_accuracy = correct.numpy() / float(total)
+        bestnet = net
+        print("intermediate accuracy :, ", best_accuracy, "corr : ", correct.numpy())
+        torch.save(bestnet, 'model.pth')  # best NET을 생성된 모델을 저장
+
+    training_loss.append(train_loss)
+print("Learning finishied!")
+
+#######################################################
+plt.plot(range(len(training_loss)), training_loss)
+
+
+#################################### 학습된 모델을 로드해서 TEST 평가 SET 평가
+
+net.eval()
+best_model = torch.load('model.pth')
+best_model.eval()
+with torch.no_grad():
+    test_loss = 0
+    correct = 0
+    correct_b = 0
+
+    total = 0
+    for data, label in (test_loader):
+        data, label = Variable(data.float()).to(device), Variable(label).to(device)
+
+        output = net.forward(data)
+        loss_t = criterion(output, label)
+        _, predicted = torch.max(output.data, 1)
+
+        output_b = best_model.forward(data)
+        loss_t_b = criterion(output_b, label)
+        __b, predicted_b = torch.max(output_b.data, 1)
+
+        total += label.size(0)
+        correct += (predicted == label).sum()
+        correct_b += (predicted_b == label).sum()
+
+    print('\nTest set: Accuracy: %.2f %% \n' % (100 * correct.numpy() / float(total)))
+    print('\nTest set: BEST MODEL Accuracy: %.2f %% \n' % (100 * correct_b.numpy() / float(total)))
+    print(total)
+
+###############################################################
+r = random.randint(0, len(test_dataset) - 1)
+X_single_data = test_dataset.test_data[r:r + 1].view(-1, 28 * 28).float().to(device)
+Y_single_data = test_dataset.test_labels[r:r + 1].to(device)
+
+print('Label: ', Y_single_data.item())
+single_prediction = net.forward(X_single_data)
+print('Prediction: ', torch.argmax(single_prediction, 1).item())
+
+print('BEST model Label: ', Y_single_data.item())
+single_prediction = best_model.forward(X_single_data)
+print('BEST model Prediction: ', torch.argmax(single_prediction, 1).item())
+
+plt.imshow(test_dataset.test_data[r:r + 1].view(28, 28), cmap='Greys', interpolation='nearest')
+plt.show()
