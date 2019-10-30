@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+import os
+import pandas as pd
+
+
+# import openpyxl
+# from PIL import Image
+# Dir_Root = "/2019-10-19"
+# Resize_Root = 'C://Users/home/Desktop/python/picture/Resize'
+# prin
+# file_name_list = os.listdir(Dir_Root)
+# print(file_name_list)
+
+# rawdata = pd.read_csv('2019-10-19.txt', encoding='utf-16', error_bad_lines=False)
+rawdata = pd.read_csv('2019-10-19.txt', encoding='utf-16', sep='delimiter', header=None)
+# rawdata = pd.read_csv('test.txt',encoding='utf-16')
+
+rawdata_2 = []
+rawdata_h = []
+rawdata_m = []
+rawdata_s = []
+
+for i in rawdata.get_values():
+    # i = repr(i)
+    print(i)
+    i = str(i.tolist())
+    # print(type(i))
+
+    if '2019-10-19' in i:
+        print(i)
+        rawdata_2.append(i)
+        rawdata_h.append(i[10:14])
+        print(rawdata_2)
+
+print(rawdata)
+print(rawdata_2)
+print(rawdata_h)
