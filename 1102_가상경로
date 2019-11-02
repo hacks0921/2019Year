@@ -1,0 +1,9 @@
+https://hongprogrammer.tistory.com/entry/%EB%94%A5%EB%9F%AC%EB%8B%9D%EC%9D%84-%EC%9C%84%ED%95%9C-%EC%A4%80%EB%B9%84%EC%82%AC%ED%95%AD?category=745376
+
+
+
+conda create -n tutorial python=3.7 numpy scipy matplotlib spyder pandas seaborn scikit-learn h5py 
+
+
+activate toturial
+
